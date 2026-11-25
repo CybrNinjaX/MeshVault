@@ -1,4 +1,4 @@
-const EXT = /\.(glb|gltf|obj|fbx|stl|usdz|ply|3mf)(\?|#|$)/i;
+const EXT = /\.(glb|gltf|obj|fbx|stl|usdz|ply|3mf|dae|abc|blend|zip)(\?|#|$)/i;
 const key = (id) => `tab_${id}`;
 const tkey = (u) => (u || "").split("?")[0];
 const active = new Map(); // tabId -> { key, t }

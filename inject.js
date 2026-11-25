@@ -1,5 +1,12 @@
 (() => {
-  const RE = /\.(glb|gltf|obj|fbx|stl|usdz|ply|3mf)(\?|#|$)/i;
+  // Meshy may expose formats either as file extensions in a URL or as keys in
+  // model_urls (where the signed URL itself often has no useful extension).
+  const RE = /\.(glb|gltf|obj|fbx|stl|usdz|ply|3mf|dae|abc|blend|zip)(\?|#|$)/i;
+  const FORMAT_ALIASES = { "glb binary": "glb", "gltf embedded": "gltf", "3d studio": "3ds" };
+  const formatKey = (value) => {
+    const key = String(value || "").trim().toLowerCase().replace(/^\./, "").replace(/[_-]+/g, " ");
+    return FORMAT_ALIASES[key] || key.replace(/\s+/g, "");
+  };
   const imageUrl = (value) => {
     if (typeof value !== "string" || !value) return "";
     try { return new URL(value, location.href).href; } catch { return ""; }
@@ -10,7 +17,10 @@
     const formats = {};
     const mu = node.model_urls || node.modelUrls;
     if (mu && typeof mu === "object")
-      for (const [k, v] of Object.entries(mu)) if (typeof v === "string" && v.startsWith("http")) formats[k.toLowerCase()] = v;
+      for (const [k, v] of Object.entries(mu)) if (typeof v === "string" && /^https?:\/\//i.test(v)) {
+        const format = formatKey(k);
+        if (format) formats[format] = v;
+      }
     for (const v of Object.values(node))
       if (typeof v === "string" && RE.test(v)) { const e = v.match(RE)[1].toLowerCase(); formats[e] = formats[e] || v; }
     if (Object.keys(formats).length) {

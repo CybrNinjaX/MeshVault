@@ -1,15 +1,9 @@
 const $ = (id) => document.getElementById(id);
 let tabId = null, items = [];
 const selected = new Set();
+const supportedFormats = ["glb", "gltf", "obj", "fbx", "stl", "usdz", "ply", "3mf", "dae", "abc", "blend", "zip"];
 const safe = (s) => String(s).replace(/[^\w\- ]+/g, "_").trim().slice(0, 60) || "model";
 const label = (it, i) => it.name || `Model ${i + 1}`;
-
-$("signIn").onclick = () => chrome.tabs.create({ url: "https://www.meshy.ai/" });
-$("continue").onclick = async () => {
-  $("login").hidden = true;
-  $("step1").hidden = false;
-  await load();
-};
 
 async function load() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -80,14 +74,18 @@ $("read").onclick = async () => {
   $("read").disabled = false;
 };
 
+load();
+
 const chosen = () => items.filter((it) => selected.has(it.id));
 
 $("next").onclick = () => {
   const counts = {};
-  chosen().forEach((it) => Object.keys(it.formats).forEach((f) => (counts[f] = (counts[f] || 0) + 1)));
+  chosen().forEach((it) => supportedFormats.forEach((f) => {
+    if (it.formats && it.formats[f]) counts[f] = (counts[f] || 0) + 1;
+  }));
   const box = $("formats");
   box.innerHTML = "";
-  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const entries = supportedFormats.filter((f) => counts[f]).map((f) => [f, counts[f]]);
   if (!entries.length) box.innerHTML = '<div class="empty">No download links were captured for the selected models.<br>Go back and press “Read all cards” again.</div>';
   entries.forEach(([f, n], i) => {
     const row = document.createElement("label");
