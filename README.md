@@ -1,6 +1,6 @@
 # MeshyGrab
 
-MeshyGrab is a Chrome extension that reads model cards and model file links from the active browser tab, lets you choose models and a file format, and downloads the matching files.
+MeshyGrab is a Chrome extension that reads model cards and model file links from the active browser tab, lets you choose models and a file format, and downloads the matching files. It recognizes GLB, glTF, OBJ, FBX, STL, USDZ, PLY, 3MF, DAE, ABC, Blend, and ZIP links when Meshy exposes them. The model list shows each card's thumbnail when the page provides a usable image URL.
 
 ## Quick start
 
@@ -48,3 +48,4 @@ The launcher opens Meshy in a separate development profile and loads the unpacke
 - MeshyGrab reads data available to the extension from browser tabs and uses Chrome downloads to save selected files.
 - A launcher starts a separate development profile; it does not publish the extension or install it permanently in your everyday browser profile. For a regular local install, use **Load unpacked** above. Public Chrome distribution requires publishing through the Chrome Web Store.
 - Download only models you own or have permission to use, and follow Meshy’s terms and applicable laws.
+# MeshVault
